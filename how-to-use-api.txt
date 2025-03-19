@@ -1,0 +1,345 @@
+# How to Use the API
+
+This guide provides step-by-step instructions on how to use the Django CRUD API with JWT Authentication.
+
+## Setting Up the Environment
+
+1. **Install dependencies**:
+   ```
+   pip install -r requirements.txt
+   ```
+
+2. **Run migrations**:
+   ```
+   python manage.py makemigrations api
+   python manage.py migrate
+   ```
+
+3. **Create a superuser** (optional for admin access):
+   ```
+   python manage.py createsuperuser
+   ```
+
+4. **Start the server**:
+   ```
+   python manage.py runserver
+   ```
+
+## Authentication
+
+### Register a New User
+
+**Endpoint**: `/api/register/`
+**Method**: POST
+**Body**:
+```json
+{
+  "username": "newuser",
+  "email": "user@example.com",
+  "password": "securepassword123"
+}
+```
+
+**Response**:
+```json
+{
+  "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+  "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+  "user": {
+    "id": 1,
+    "username": "newuser",
+    "email": "user@example.com"
+  }
+}
+```
+
+### Login
+
+**Endpoint**: `/api/login/`
+**Method**: POST
+**Body**:
+```json
+{
+  "username": "newuser",
+  "password": "securepassword123"
+}
+```
+
+**Response**:
+```json
+{
+  "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+  "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+}
+```
+
+### Refresh Token
+
+**Endpoint**: `/api/token/refresh/`
+**Method**: POST
+**Body**:
+```json
+{
+  "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+}
+```
+
+**Response**:
+```json
+{
+  "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+}
+```
+
+## Using Authentication
+
+For all protected endpoints, add the access token to the Authorization header:
+
+```
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+```
+
+## Publishers API
+
+### List All Publishers
+
+**Endpoint**: `/api/publishers/`
+**Method**: GET
+**Headers**: Authorization with Bearer token
+**Response**:
+```json
+[
+  {
+    "id": 1,
+    "name": "Example Publishing",
+    "address": "123 Book Street, Library City"
+  },
+  {
+    "id": 2,
+    "name": "Tech Books Inc",
+    "address": "456 Code Avenue, Developer Town"
+  }
+]
+```
+
+### Create a Publisher
+
+**Endpoint**: `/api/publishers/`
+**Method**: POST
+**Headers**: Authorization with Bearer token
+**Body**:
+```json
+{
+  "name": "New Publisher",
+  "address": "789 Novel Road, Bookville"
+}
+```
+
+**Response**:
+```json
+{
+  "id": 3,
+  "name": "New Publisher",
+  "address": "789 Novel Road, Bookville"
+}
+```
+
+### Get a Specific Publisher
+
+**Endpoint**: `/api/publishers/1/`
+**Method**: GET
+**Headers**: Authorization with Bearer token
+**Response**:
+```json
+{
+  "id": 1,
+  "name": "Example Publishing",
+  "address": "123 Book Street, Library City"
+}
+```
+
+### Update a Publisher
+
+**Endpoint**: `/api/publishers/1/`
+**Method**: PUT
+**Headers**: Authorization with Bearer token
+**Body**:
+```json
+{
+  "name": "Updated Publisher Name",
+  "address": "123 Book Street, Library City"
+}
+```
+
+**Response**:
+```json
+{
+  "id": 1,
+  "name": "Updated Publisher Name",
+  "address": "123 Book Street, Library City"
+}
+```
+
+### Delete a Publisher
+
+**Endpoint**: `/api/publishers/1/`
+**Method**: DELETE
+**Headers**: Authorization with Bearer token
+**Response**: 204 No Content
+
+## Books API
+
+### List All Books
+
+**Endpoint**: `/api/books/`
+**Method**: GET
+**Headers**: Authorization with Bearer token
+**Response**:
+```json
+[
+  {
+    "id": 1,
+    "title": "Django for Beginners",
+    "author": "Jane Doe",
+    "isbn": "9781234567890",
+    "publication_date": "2023-01-15",
+    "publisher": 1,
+    "publisher_name": "Example Publishing"
+  },
+  {
+    "id": 2,
+    "title": "Advanced Python",
+    "author": "John Smith",
+    "isbn": "9789876543210",
+    "publication_date": "2023-02-20",
+    "publisher": 2,
+    "publisher_name": "Tech Books Inc"
+  }
+]
+```
+
+### Create a Book
+
+**Endpoint**: `/api/books/`
+**Method**: POST
+**Headers**: Authorization with Bearer token
+**Body**:
+```json
+{
+  "title": "New Book Title",
+  "author": "Author Name",
+  "isbn": "9781122334455",
+  "publication_date": "2023-03-10",
+  "publisher": 1
+}
+```
+
+**Response**:
+```json
+{
+  "id": 3,
+  "title": "New Book Title",
+  "author": "Author Name",
+  "isbn": "9781122334455",
+  "publication_date": "2023-03-10",
+  "publisher": 1,
+  "publisher_name": "Example Publishing"
+}
+```
+
+### Get a Specific Book
+
+**Endpoint**: `/api/books/1/`
+**Method**: GET
+**Headers**: Authorization with Bearer token
+**Response**:
+```json
+{
+  "id": 1,
+  "title": "Django for Beginners",
+  "author": "Jane Doe",
+  "isbn": "9781234567890",
+  "publication_date": "2023-01-15",
+  "publisher": 1,
+  "publisher_name": "Example Publishing"
+}
+```
+
+### Update a Book
+
+**Endpoint**: `/api/books/1/`
+**Method**: PUT
+**Headers**: Authorization with Bearer token
+**Body**:
+```json
+{
+  "title": "Updated Book Title",
+  "author": "Jane Doe",
+  "isbn": "9781234567890",
+  "publication_date": "2023-01-15",
+  "publisher": 1
+}
+```
+
+**Response**:
+```json
+{
+  "id": 1,
+  "title": "Updated Book Title",
+  "author": "Jane Doe",
+  "isbn": "9781234567890",
+  "publication_date": "2023-01-15",
+  "publisher": 1,
+  "publisher_name": "Example Publishing"
+}
+```
+
+### Delete a Book
+
+**Endpoint**: `/api/books/1/`
+**Method**: DELETE
+**Headers**: Authorization with Bearer token
+**Response**: 204 No Content
+
+## Common HTTP Status Codes
+
+- **200 OK**: Request succeeded
+- **201 Created**: Resource created successfully
+- **204 No Content**: Request succeeded, no content returned (e.g., after deletion)
+- **400 Bad Request**: Invalid request format or data
+- **401 Unauthorized**: Authentication required or failed
+- **403 Forbidden**: Authentication succeeded but user doesn't have permission
+- **404 Not Found**: Resource not found
+- **500 Internal Server Error**: Server-side error
+
+## Testing with cURL
+
+### Register a User
+```bash
+curl -X POST http://localhost:8000/api/register/ \
+  -H "Content-Type: application/json" \
+  -d '{"username":"testuser","email":"test@example.com","password":"password123"}'
+```
+
+### Login
+```bash
+curl -X POST http://localhost:8000/api/login/ \
+  -H "Content-Type: application/json" \
+  -d '{"username":"testuser","password":"password123"}'
+```
+
+### Create a Publisher
+```bash
+curl -X POST http://localhost:8000/api/publishers/ \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -d '{"name":"Test Publisher","address":"123 Test St"}'
+```
+
+### Create a Book
+```bash
+curl -X POST http://localhost:8000/api/books/ \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -d '{"title":"Test Book","author":"Test Author","isbn":"1234567890123","publication_date":"2023-01-01","publisher":1}'
+```
